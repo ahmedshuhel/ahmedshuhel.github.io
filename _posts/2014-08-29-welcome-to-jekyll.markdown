@@ -33,6 +33,17 @@ Check out the [Jekyll docs][jekyll] for more info on how to get the most out of 
 </footer>
 {% endhighlight %}
 
+```javascript
+class Student {}
+
+var s = new Student();
+
+s.doWork = () => {
+  return false;
+};
+
+```
+
 
 [jekyll]:      http://jekyllrb.com
 [jekyll-gh]:   https://github.com/jekyll/jekyll
