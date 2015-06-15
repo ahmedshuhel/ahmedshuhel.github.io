@@ -9,12 +9,7 @@ image: /assets/article_images/2014-11-30-mediator_features/night-track.JPG
 
 #Bundling Aurelia Application
 
-Let's start by saying that bundling is an antipattern. Aurelia is a next generation presentation framework and tryies to promote good design patterns and practises. http2 spec is underway and that will eleminate the need for bundling. But right now we need it. 
-
-## Fine grained caching
-HTTP2 enables fine grain caching on client side.
-
-While bundling is good for http1 it may be an antipattern for http2. But that is for an ideal world. http2 is still a proposed standerd and will take time probably yeras to arrive. Right now we need bundling.
+Let's start with a controvertail statement, "*Bundling is an anti-pattern*" We loose some benefits including fine grained caching when we do create bundles. Aurelia is a next generation framework that promotes good design patterns and practices. The next version of http, [HTTP/2](https://en.wikipedia.org/wiki/HTTP/2) will help us avoid crating bundle altogether. But, that's the ideal world and we are far from it. HTTP/2 is not yet implemented and we need bundling. Nobody likes to see an application making 124 requests upon loading. 
 
 
 We will use our [skeleton-navigation](http://github.com/aurelia/skeleton-navigation) as the application. Let's just quickly clone it and give it a try.
@@ -26,7 +21,7 @@ We will use our [skeleton-navigation](http://github.com/aurelia/skeleton-navigat
 git clone git@github.com:aurelia/skeleton-navigation.git
 ```
 
-Now, `cd` into the project root and commands
+Now, `cd` into the project root and run the following commands:
 
 ```bash
  npm install 
@@ -40,39 +35,41 @@ At this point we can run the following gulp task to see our application running 
 
 ```bash
  gulp serve
-
 ```
 
-Up untill now, we have done nothing about bundling, we just setup our project to do that. Now at this point you have decided that enough is enough I want to put my project into production and you open the dev tool to see what's going in there. And you see
+Up untill now, we have done nothing about bundling, we just setup our project to do that. Let's say, we have decided to put our project into production and we open the `browser dev tool` to see how many request are being made by the application: 
 
-[put a image there]
+![No of requests been made](/assets/article_images/2015-06-13-bundling-aurelia-application/unbundled-aurelia-application.jpg)
 
+256! Yep, that's a scarry picture for a production scenario.  
 
-If you just open the dev tool(assuming you are using chorme) you will see 126+ requests. For developemet it's what you need. It helps us debug issues and what not. But for production, well you are in trouble. We need bundle. So, here is `cli` to the resque. 
+ We want to minimize the number of requests. So, Let's call `Aurelia-CLI` to the resque. 
 
-## Installing `Aurelia CLI`
+## Installing Aurelia CLI
 
-Building app with aurelia is a treat. Aurelia cli wisesh to take it further.  Let's run the the command bellow:
+Building apps with aurelia is a breeze. Aurelia CLI wishes to take it even further. This post is all about bundling, one of the features that CLI has. We will be writing a lot about CLI to showcase it's features and capabilites in the future. Let's run the command bellow to install it. 
+
 
 ```bash
 npm install -g aurelia-cli
 ```
 
 
-Now, let's install it local to our project too.
+We need to install `cli` locally too. To do so `cd` into `skeleton-navigation` project's root folder and run: 
 
 ```bash
 npm install aurelia-cli --save-dev
 ```
 
-Bufore running our bundle command we will tell `cli` what to bundle. Let's add a `aureliafile.js` in the root of our project and use the configuration bellow:
+We are all set for creating the bundle. Bufore running our bundle command we will tell `cli` what to bundle. Let's add a `aureliafile.js` in the root of our project and use the configuration bellow:
 
 ```javascript
 var aurelia = require("aurelia-cli");
 
-aurelia.command("bundle", {
+aurelia
+   .command("bundle", {
     js: {
-        "dist/appbundle": {
+        "dist/app-bundle": {
             modules: [
               "app", "main", "about/**", "movies/**", "resources/**",
               "aurelia-bootstrapper",
@@ -100,13 +97,17 @@ Let's refresh our browser again keeping the dev tool open
 
 > make sure you bust the cache.
 
-Requests came down to 4 which is significantly.
+Requests came down to  which is significant imporvement as far as number of requests are concern.
 
 ## Paths and maps are important
 
 We have to keep the paths in mind when bundling app with cli. glob paths like `dist/*` or `dist/**/*` We have contributed back to jspm for this functionality. 
 
+you can use minify as the option too, it will minify.
+
 ## Template bundle
+
+This is just the javascript part but what about those views/templates. For a large app that can be quite a big number too. Well let's see how we can bundle them too. Add the template config section in the `arureliafile.js` as:
 
 ```javascript
 var aurelia = require("aurelia-cli");
@@ -137,7 +138,14 @@ aurelia.command("bundle", {
 });
 ```
 
-As we can see we have added a template secton. 
+Now run `aurelia bundle` again. This time a new file named `app-bundle.html` should be created in the `dist` folder. And as you have set `inject` to true. A `<link rel="import" href="./dist/app-bundle.html">` tag been injected at the end of the `body` tag.
 
+Now let's reload the application and see the request count. 
+
+## Important things to keep in mind when bundling template
+- 
 - Globs from the `baseURL`
-- inject does inject a `<link rel="import" >`
+- inject does inject a `<link rel="import" >` with an attribute named `aurelia-view-bundle` 
+- That's how the `aurelia-loader` knows it.
+
+
