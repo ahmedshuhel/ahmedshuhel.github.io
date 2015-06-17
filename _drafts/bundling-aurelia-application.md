@@ -1,10 +1,11 @@
 ---
 layout: post
-title:  "Bundling Aurelia Application"
-date:   2015-06-13 14:34:25
+title: "Bundling Aurelia Application"
+date: 2015-06-13 14:34:25
 categories: aurelia bundling 
 tags: featured
 image: /assets/article_images/2014-11-30-mediator_features/night-track.JPG
+
 ---
 
 # Bundling Aurelia Application
@@ -42,9 +43,16 @@ Up untill now, we have done nothing about bundling, we just setup our project to
 
 ![No of requests been made](/assets/article_images/2015-06-13-bundling-aurelia-application/unbundled-aurelia-application.jpg)
 
-258! Yep, that's a scarry picture for a production scenario.
+258! Yep, that's a scarry picture for a production scenario. We want to minimize the number of requests. So, Let's call `Aurelia-CLI` to the resque. 
 
- We want to minimize the number of requests. So, Let's call `Aurelia-CLI` to the resque. 
+
+One last thing before bundling `skeleton-navigation`, We will change change `bootstrap.css` loding from `src\app.js` to `index.html` to do so follow these steps:
+
+- Open `src\app.js` and delete line 2:  `import 'bootstrap/css/bootstrap.css!';`
+- Open `index.html` and add `<link rel="stylesheet" type="text/css" href="jspm_packages/github/twbs/bootstrap@3.3.4/css/bootstrap.css">` inside the `head` tag.
+
+> There is a possible bug in bundling css at the moment. By doing the above we are excluding css assets from being bundled.
+
 
 ## <a name="installing-cli"></a>Installing Aurelia CLI
 
@@ -103,7 +111,7 @@ finally let's run the command bellow for the shell
 aurelia bundle
 ```
 
-We now have two files in `dist` folder
+We now should have a file in `dist\app-bundle.js`
 
 Let's refresh our browser again keeping the dev tool open
 

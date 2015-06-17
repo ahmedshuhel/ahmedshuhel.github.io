@@ -1,10 +1,8 @@
 ---
 layout: post
 title: Writing is Hard
-categories: []
-tags: []
-published: True
-
+categories: general writing 
+published: false 
 ---
 
 Often times I feel like writing is harder than writing code. This is mainly becasue of the confusing I have. Before writing code I know exactly what I want. So my every keystroke is geaared toward achiving that resual. Of course I keep readability in mind. I don't consider a code base well if it does not reads well. 
