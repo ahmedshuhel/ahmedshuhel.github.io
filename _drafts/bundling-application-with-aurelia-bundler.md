@@ -238,4 +238,16 @@ Let's add another bundle like:
     }
 ```
 
-If you are previously using `cli` to bundle this may look famalier. 
+If you are previously using `cli` to bundle this may look famalier. Only difference here is that, we have introduced some sort of uniformity in the config api. So let's examine this config:
+
+- **dist/view-bundle** : The bundle file. Will be placed in dist/view-bundle.html.
+- **htmlimport** : This is what makes it different from other bundle. If this is set to `true` the bundler will terat is as a html import based bundle and aurelia loader will give it a different treatment as well.
+- **includes**: All the glob patters are supported here. Usually we would write a pattern that covers all the templates that we want to include in the bundle. Array of patterns are supported as well:
+```javascript
+includes : ['dist/**/*.html', '!dist/movie/*.html']
+```
+- **options** : if `inject` is set to `true` then a `<link rel="import" src="path\of\bundle.html" />` will be injected in the body of `index.html`. If we would like to keep our `index.html` clean and create a separate index file then we would set `indexFile` and `destFile`.
+
+```javascript
+destFile : 'dir/dest_index.html'
+``` 
