@@ -8,26 +8,25 @@ image: /assets/article_images/2014-11-30-mediator_features/night-track.JPG
 
 ---
 
-# What has changed for Aurlia Loader?
+Previously, Aurelia Loader used HTML Imports to load all  views. Now, as it is apparent that HTML Imports is not going to be standardized, We have replaced our default view loading mechanism with a SystemJS `text` based solution. The same is applied to css as well. To learn more about this change see [this post.](http://blog.durandal.io/2015/09/05/aurelia-early-september-release-notes/)  The reason we are saying it twice is because it changes how we would bundle our app.
 
-Pervisusly our views are being loaded with html import. It looks like the htmlimport spec is not going to standerized. This is why we have already changed the view loding mechanison for aurelia. We now take advantage of SystemJs `text` based loading for both tempaltes and css.  
+Again previously, we were using Aurelia CLI to bundle our apps. Recently, it is been deprecated in favor of providing first class support for tools like gulp, grunt, yo etc. And, we have created a small focused bundling library [Aurelia Bundler.](http://github.com/aurelia/bundler)
 
-# Aurelia CLI is deprecated. Is there any bundling solution now?
-Since the existing echo system is great for developing aurelia application we decided have a first class support for `gulp` etc. So, we decided to make bundler a seperate lib so that it can be used from gulp or grunt or any other. workflow.
 
-# Can we use aurelia bundler with gup
+In this post we will see how we can easily use [Aurelia Bundler](http://github.com/aurelia/bundler) and create a gulp task for bundling our app. Let's jump right into it. We will use `skeleton-navigation` as our app to bundle. If don't have that setup. Follow [these steps](https://github.com/aurelia/skeleton-navigation#running-the-app).
 
-[Aurelia Bundler](http://github.com/aurelia/bundler) can easily be used within a gulp task. Let's jump right into it. We will use `skeleton-navigation` for our expample. If don't have that setup. Follow these steps.
-
-Let's start by installing `aurelia-bundler`. To do so `cd` into `skeleton-navigation` and run the following command:
+Now that we have our app running proudly, let's start by installing `aurelia-bundler`. To do so `cd` into `skeleton-navigation` and run the following command:
 
 ```shell
 npm install aurelia-bundler --save-dev
 ```
 
-Now, let's create a `bundle.js` file into `build/tasks/bundle.js`
+Now, let's create a `bundle.js` file in `build/tasks/bundle.js` as:
 
 ```javascript
+var gulp = require('gulp');
+var bundle = require('aurelia-bundler').bundle;
+
 var config = {
   force: true,
   packagePath: '.',
@@ -38,10 +37,6 @@ var config = {
         '*.html!text',
         '*.css!text',
         'bootstrap/css/bootstrap.css!text'
-      ],
-      excludes: [
-        'npm:core-js',
-        'github:jspm/nodelibs-process'
       ],
       options: {
         inject: true,
@@ -69,120 +64,27 @@ var config = {
   }
 };
 
-gulp.task('bundle', function(cb) {
-  bundle(config).then(function() {
-    cb();
-  }).catch(function(err) {
-    console.log(err);
-  });
+gulp.task('bundle', function() {
+  return bundle(config);
 });
-
-/*
-var config = {
-  force: true,
-  packagepath: '.',
-  bundles: {
-    "dist/app-build": {
-      includes: [
-        '*',
-        'bootstrap/css/bootstrap.css!text'
-      ],
-      excludes: [
-        'npm:core-js',
-        'github:jspm/nodelibs-process'
-      ],
-      options: {
-        inject: true,
-        minify: true
-      }
-    },
-    "dist/aurelia": {
-      includes: [
-        'aurelia-bootstrapper',
-        'aurelia-fetch-client',
-        'aurelia-router',
-        'aurelia-animator-css',
-        'github:aurelia/templating-binding',
-        'github:aurelia/templating-resources',
-        'github:aurelia/templating-router',
-        'github:aurelia/loader-default',
-        'github:aurelia/history-browser',
-        'github:aurelia/logging-console'
-      ],
-      options: {
-        inject: true,
-        minify: true
-      }
-    },
-    "dist/view-bundle": {
-      htmlimport: true,
-      includes: 'dist/*.html',
-      options: {
-        inject: {
-          indexfile : 'index.html',
-          destfile : 'dest_index.html',
-        }
-      }
-    }
-  }
-};
-
-var config = {
-  force: true,
-  packagePath: '.',
-  bundles: {
-    "dist/app-build": {
-      includes: [
-        '*',
-        '*.html!text',
-        '*.css!text',
-        'bootstrap/css/bootstrap.css!text'
-      ],
-      excludes: [
-        'npm:core-js',
-        'github:jspm/nodelibs-process'
-      ],
-      options: {
-        inject: true,
-        minify: true
-      }
-    },
-    "dist/aurelia": {
-      includes: [
-        'aurelia-bootstrapper',
-        'aurelia-fetch-client',
-        'aurelia-router',
-        'aurelia-animator-css',
-        'github:aurelia/templating-binding',
-        'github:aurelia/templating-resources',
-        'github:aurelia/templating-router',
-        'github:aurelia/loader-default',
-        'github:aurelia/history-browser',
-        'github:aurelia/logging-console'
-      ],
-      options: {
-        inject: true,
-        minify: true
-      }
-    },
-    "dist/vendor": {
-      includes: [
-        'text',
-        'github:jspm/nodelibs-process'
-      ],
-      options: {
-        inject: true,
-        minify: true
-      }
-    }
-  }
-};
-*/
 ```
 
-with that in place if you run `gulp bundle` two file will be created. `config.js` will be updated.
+with that file in place, Let's run the command bellow:
 
-Let's analyze what it does. We will skip `force` and `packagePath` for a moment. the configuration is all in `bundles`. You can create as many bundles as you want. Here we have created two. One for our source code and the other for all aurelia libs.
+```shell
+gulp bundle
+```
+
+Here are the things that happed after gulp is finished executing the task:
+
+- A file `dist/app-build.js` is created.
+- A file `dist/aurelia.js` is created.
+- `config.js` is updated.
+
+
+Now, if we refresh/reload the app, we will see a lot less network requests and our app is properly bundled.
+
+Let us now take a closer look at the `config` object. We will skip `force` and `packagePath` for a moment. `bundles` is where we will focus now. You can create as many bundles as you want. Here we have created two. One for our source code and the other for all aurelia libs.
 
 ```javascript
     "dist/app-build": {
@@ -231,8 +133,8 @@ Let's add another bundle like:
       includes: 'dist/*.html',
       options: {
         inject: {
-          indexfile : 'index.html',
-          destfile : 'dest_index.html',
+          indexFile : 'index.html',
+          destFile : 'dest_index.html',
         }
       }
     }
@@ -250,4 +152,4 @@ includes : ['dist/**/*.html', '!dist/movie/*.html']
 
 ```javascript
 destFile : 'dir/dest_index.html'
-``` 
+```
