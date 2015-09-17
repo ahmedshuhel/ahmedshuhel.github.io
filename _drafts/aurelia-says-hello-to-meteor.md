@@ -25,9 +25,10 @@ The bundling is not enough. Need something more like aurelia-meteor package
 
 ## SystemJS
 
-
 ## How to integrate data
 
 ## The example application
 
 ## When should we do that?
+
+## SystemJS pollyfills and Internet Explorer/Edge
