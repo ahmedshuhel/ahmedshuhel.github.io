@@ -32,3 +32,5 @@ The bundling is not enough. Need something more like aurelia-meteor package
 ## When should we do that?
 
 ## SystemJS pollyfills and Internet Explorer/Edge
+
+## Type Script Support. 
