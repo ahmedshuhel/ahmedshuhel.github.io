@@ -1,5 +1,8 @@
 # Aurelia Meteor
 
+##
+Most important thing about writing a SPA app in Meteor Platform is to understand how meteor loads assets like html and js. We need a different extension and tell meteor to treat thse extensions differently so we went with `.es.js` and `.tmpl.html`. The rest is upto babel and aurelia bundler.
+
 ## Context
 Let's first thnks @Mark and @Pavlovic to put the idea in my head.
 
