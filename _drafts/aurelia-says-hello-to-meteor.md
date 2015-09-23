@@ -11,7 +11,7 @@ The bundling is not enough. Need something more like aurelia-meteor package
 ## Creating the bridge
 
 ## How meteor treats assests like js and html
-
+Meteor treats `html` and `js` like it has the only right to have them, no one else can even play with them. But it of course let of it through plugins.
 ## Bundling is the name of the game
 
 ## Blaze and Aurelia template
