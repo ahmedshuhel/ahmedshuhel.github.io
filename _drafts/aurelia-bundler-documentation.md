@@ -1,4 +1,4 @@
----
+ ---
 layout: post
 title: "Aurelia Bunder: The Documentations"
 date: 2015-11-18 14:34:25
@@ -8,22 +8,34 @@ image: /assets/article_images/2014-11-30-mediator_features/night-track.JPG
 
 ---
 ## Introduction
-You have completed developing the most beatiful web application in the world. Your customer can't wait to use this application. Everybody is excited. 
+You have completed developing the most beatiful web application in the world. Everything works as expected in the development and build machine. Your customer can't wait to use this application. Everybody is excited. You need to ship to customer. Wait! Before that, we need to "bundle" the application first.
 
 ## What is bundling?
 
+Bundling and minification are two techniques you can use in ASP.NET 4.5 to improve request load time.  Bundling and minification improves load time by reducing the number of requests to the server and reducing the size of requested assets (such as CSS and JavaScript.)
+
+Most of the current major browsers limit the number of simultaneous connections per each hostname to six. That means that while six requests are being processed, additional requests for assets on a host will be queued by the browser. In the image below, the IE F12 developer tools network tabs shows the timing for assets required by the About view of a sample application
+
 ## Why it is even necessary?
+Why browsers have this limit?
+
+You may ask if this limit can have such a great impact to performance, then why don't browser give us a higher limit so that user can enjoy better browsing experience. However, most of the well-known browsers choose not to grant your wish, so that the server will not be overloaded by small amount of browsers and end up classifying user as DDOS attacker.
+
+In the past, the common limit is only 2 connections. This may be sufficient in the beginning day of web pages as most of the contents are delivered in a single page load. However, it soon become the bottleneck when css, javascript getting popular. Because of this, you can notice the trend to increase this limit for modern browsers. Some browsers even allow you to modify this value (Opera) but it is better not to set it too high unless you want to load test the server.
+
+How to handle this limit?
+
+This limit will not cause slowness in your website if you manage your resource well and not hitting the limit. When your page is first loaded, there is a first request which contain html content. When the browser process html content, it spawn more requests to load resource like css, images, js. It also execute javascript and send Ajax requests to server as you instruct it to do.
+
+Fortunately, static resources can be cached and only be downloaded the first time. If it cause slowness, it happen only on first page load and is still tolerable. It is not rare that user will see a page frame loaded first and some pictures slowly appear later later. If you feel that your resources is too fragmented and consume too many requests, there are some tools available that compress and let browser load all resources in single request (UglifyJS, Rhino, YUI Compressor, ...)
+
+Lack of control on Ajax requests cause more severe problem. I would like to share some sample of poor design that cause slowness on page loading.
+
 
 ## How to bundle Aurelia application?
 
-Previously, Aurelia Loader used HTML Imports to load all views. Now, as it is apparent that HTML Imports is not going to be standardized, We have replaced our default view loading mechanism with a SystemJS `text` based solution. The same is applied to css as well. To learn more about this change read [this post.](http://blog.durandal.io/2015/09/05/aurelia-early-september-release-notes/)  The reason we are saying it twice is because it changes how we would bundle our app too.
 
-Again previously, we were using Aurelia CLI to bundle our apps. Recently, it is been deprecated in favor of providing first class support for tools like gulp, grunt, yo etc. And, we have created a small focused bundling library [Aurelia Bundler.](http://github.com/aurelia/bundler) that can be used from a `gulp` task or any other tools.
-
-> Note that, `jspm bundle` wouldn't bundle the views back then.
-
-
-In this post we will see how we can  use [Aurelia Bundler](http://github.com/aurelia/bundler) and create a gulp task for bundling our app. Let's jump right into it. We will use `skeleton-navigation` as our app to bundle. If you don't have that setup. Follow [these steps](https://github.com/aurelia/skeleton-navigation#running-the-app).
+how we can  use [Aurelia Bundler](http://github.com/aurelia/bundler) and create a gulp task for bundling our app. Let's jump right into it. We will use `skeleton-navigation` as our app to bundle. If you don't have that setup. Follow [these steps](https://github.com/aurelia/skeleton-navigation#running-the-app).
 
 Now that we have our app running proudly, let's start by installing `aurelia-bundler`. To do so `cd` into `skeleton-navigation` and run the following command:
 
