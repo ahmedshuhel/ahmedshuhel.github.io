@@ -1,4 +1,4 @@
- ---
+---
 layout: post
 title: "Aurelia Bunder: The Documentations"
 date: 2015-11-18 14:34:25
@@ -7,37 +7,35 @@ tags: featured
 image: /assets/article_images/2014-11-30-mediator_features/night-track.JPG
 
 ---
+
 ## Introduction
-You have completed developing the most beatiful web application in the world. Everything works as expected in the development and build machine. Your customer can't wait to use this application. Everybody is excited. You need to ship to customer. Wait! Before that, we need to "bundle" the application first.
 
-## What is bundling?
+Most of the current major browsers limit the number of simultaneous connections per each hostname to six. That means that while six requests are being processed, additional requests for assets on a host will be queued by the browser. In the image below, the Chrome F12 developer tools network tabs shows the timing for assets required by the `welcome view` of skeleton-naviagation application.
 
-Bundling and minification are two techniques you can use in ASP.NET 4.5 to improve request load time.  Bundling and minification improves load time by reducing the number of requests to the server and reducing the size of requested assets (such as CSS and JavaScript.)
+[Include the image here.]
 
-Most of the current major browsers limit the number of simultaneous connections per each hostname to six. That means that while six requests are being processed, additional requests for assets on a host will be queued by the browser. In the image below, the IE F12 developer tools network tabs shows the timing for assets required by the About view of a sample application
+> We can see there are over 150 requests being made to load the firt view and while the first 6 requests are being processd the others are waiting. 
 
-## Why it is even necessary?
-Why browsers have this limit?
+In the past, the common limit is only 2 connections. This may be sufficient in the beginning days of web pages as most of the contents are delivered in a single page load. However, it soon become the bottleneck when rich client applications like Aurelia are popular.
 
-You may ask if this limit can have such a great impact to performance, then why don't browser give us a higher limit so that user can enjoy better browsing experience. However, most of the well-known browsers choose not to grant your wish, so that the server will not be overloaded by small amount of browsers and end up classifying user as DDOS attacker.
-
-In the past, the common limit is only 2 connections. This may be sufficient in the beginning day of web pages as most of the contents are delivered in a single page load. However, it soon become the bottleneck when css, javascript getting popular. Because of this, you can notice the trend to increase this limit for modern browsers. Some browsers even allow you to modify this value (Opera) but it is better not to set it too high unless you want to load test the server.
-
-How to handle this limit?
-
-This limit will not cause slowness in your website if you manage your resource well and not hitting the limit. When your page is first loaded, there is a first request which contain html content. When the browser process html content, it spawn more requests to load resource like css, images, js. It also execute javascript and send Ajax requests to server as you instruct it to do.
-
-Fortunately, static resources can be cached and only be downloaded the first time. If it cause slowness, it happen only on first page load and is still tolerable. It is not rare that user will see a page frame loaded first and some pictures slowly appear later later. If you feel that your resources is too fragmented and consume too many requests, there are some tools available that compress and let browser load all resources in single request (UglifyJS, Rhino, YUI Compressor, ...)
-
-Lack of control on Ajax requests cause more severe problem. I would like to share some sample of poor design that cause slowness on page loading.
+> You may ask if this limit can have such a great impact to performance, then why don't browser give us a higher limit so that user can enjoy better browsing experience. However, most of the well-known browsers choose not to grant our wish, so that the server will not be overloaded by small amount of browsers and end up classifying user as DDOS attacker.
 
 
-## How to bundle Aurelia application?
+## Bundling & Minification
+
+This limit will not cause slowness in our application if we can manage the resource well and do not hit connection limit. When the page is first loaded, there is a first request which contain html content. When the browser process html content, it spawn more requests to load resource like js, css, images. It also execute javascript and send Ajax requests to server.
+
+We have to compress the assets and make fewer (possibly less than 6) requests to load all the assests we need.Fortunately, static resources can be cached and only be downloaded the first time. If it cause slowness, it happen only on first page load and is still tolerable.
 
 
-how we can  use [Aurelia Bundler](http://github.com/aurelia/bundler) and create a gulp task for bundling our app. Let's jump right into it. We will use `skeleton-navigation` as our app to bundle. If you don't have that setup. Follow [these steps](https://github.com/aurelia/skeleton-navigation#running-the-app).
+Bundling and minification is a technique you can use in Aurelia to improve request load time.  Bundling and minification improves load time by reducing the number of requests to the server and reducing the size of requested assets such as view, viewmodel and css. 
 
-Now that we have our app running proudly, let's start by installing `aurelia-bundler`. To do so `cd` into `skeleton-navigation` and run the following command:
+
+## Bundling Aurelia Application
+
+We can  use [Aurelia Bundler](http://github.com/aurelia/bundler) and create a gulp task for bundling our app. Let's jump right into it. We will use `skeleton-navigation` as our app to bundle. If you don't have that setup. Follow [these steps](https://github.com/aurelia/skeleton-navigation#running-the-app).
+
+Now that we have our app running, let's start by installing `aurelia-bundler`. To do so `cd` into `skeleton-navigation` and run the following command:
 
 ```shell
 npm install aurelia-bundler --save-dev
@@ -55,17 +53,16 @@ var config = {
   bundles: {
     "dist/app-build": {
       includes: [
-        '*',
+        '[*]',
         '*.html!text',
-        '*.css!text',
-        'bootstrap/css/bootstrap.css!text'
+        '*.css!text',        
       ],
       options: {
         inject: true,
         minify: true
       }
     },
-    "dist/aurelia": {
+    "dist/vendor-build": {
       includes: [
         'aurelia-bootstrapper',
         'aurelia-fetch-client',
@@ -76,7 +73,8 @@ var config = {
         'github:aurelia/templating-router',
         'github:aurelia/loader-default',
         'github:aurelia/history-browser',
-        'github:aurelia/logging-console'
+        'github:aurelia/logging-console',
+        'bootstrap/css/bootstrap.css!text'
       ],
       options: {
         inject: true,
@@ -106,7 +104,92 @@ Here are the things that happened after gulp is finished executing the task:
 
 Now, if we refresh/reload the app from the browser, we will see a lot less network request. And, that means our app is properly bundled.
 
-Let us now take a closer look at the `config` object. We will skip `force` and `packagePath` for the moment. `bundles` is where we will focus now. We can create as many bundles as we want. Here we have created two. One for the app source and other for the Aurelia libs. Again, we can create just a single bundle if we want that combines both application source and Aurelia libs. The number of bundle we would like to have mostly depends on our application structure and the usage pattern of our app. For example, if our app has built in a way that actually is a collection of child-app/sections, then a `common` bundle and a `bundle per section` makes much sense and performs better than a huge single bundle that needs to be loaded upfront.
+We can create as many bundles as we want. Here we have created two. One for our application code and other for Aurelia and thirdparty libs. 
+
+We can create just a single bundle if we want that combines both application code and and thirdpary libs. The number of bundle we would like to have mostly depends on our application structure and the usage pattern of our app. For example, if our app has built in a way that actually is a collection of child-app/sections, then a `common` bundle for third party libs and a `bundle per section` makes much sense and performs better than a huge single bundle that needs to be loaded upfront.
+
+# Duplicate Modules in Multiple Bundles.
+
+Creating multiple bundle requires to be extra careful because multiple bundle may contain duplicate modules. Before explaining that we need to understand how bundling works behind the scene a bit. Let's consider the example modules `A` and `B` below: 
+
+** a.js **
+
+```javascript
+ import b from './b';
+ console.log('I am module `A`');
+```
+
+** b.js **
+
+```javascript
+ console.log('I am module `B`');
+```
+
+So, when we want to bundle `a.js`, the bundler will analyze the source code of the module and find the dependcies by tracing the `import` statements. Here bundler will yeild `b.js` as the dependency of `a.js` and ulimately place `b.js` in the bundle.  
+
+Let us now take a closer look at the `config` object. We will skip `force` and `packagePath` for the moment. `bundles` is where we will focus now specifically the `includes`. 
+
+```javascript
+  bundles: {
+    "dist/app-build": {
+      includes: [
+        '[*]',
+        '*.html!text',
+        '*.css!text',        
+      ],
+```
+Please pay attention to the pattern `[*]`. Bundler support some glob patterns like `*`, `*/**` etc. `*` here means, we are interested to bundle all the `js` assents in `dist` folder(considering the `path` in `config.js`). So what does `[*]` mean here? Well, as we know bundler will trace the module dependencies from the import statements. Lot's of our code refers to the modules of `Aurelia` via `import` statements. For example: 
+
+**users.js**
+
+```javascript
+import {inject} from 'aurelia-framework';
+import {HttpClient} from 'aurelia-fetch-client';
+import 'fetch';
+
+@inject(HttpClient)
+export class Users{
+  heading = 'Github Users';
+  users = [];
+
+  constructor(http){
+    http.configure(config => {
+      config
+        .useStandardConfiguration()
+        .withBaseUrl('https://api.github.com/');
+    });
+
+    this.http = http;
+  }
+
+  activate(){
+    return this.http.fetch('users')
+      .then(response => response.json())
+      .then(users => this.users = users);
+  }
+}
+```
+
+When bundler will analyze this file it will find `aurelia-framework` and `aurelia-fetch-client` as it's dependency and include in the bundle. But bundler does not stop there. It will recursively find the dependency of `aurelia-framework` and `aurelia-fetch-client` and will go on untill there nothing left.
+
+```javascript 
+  bundles: {
+    "dist/app-build": {
+      includes: [
+        '*',
+        '*.html!text',
+        '*.css!text',        
+      ],
+```
+
+Having `*` in the above config will create a bundle which will include lot's of `Aurelia` libraries including `aurelia-framework` and `aurelia-fetch-client`. If we conider the second bundle config `dist/vendor-build`, we have 'aurelia-bootstrapper' and 'aurelia-fetch-client'. `aurelia-bootstrapper` will yeild `aurelia-framework`. Ultimately we will end up with duplicate modules in both the bundles. 
+        
+Our goal is to create a bundle of our application code only. We have to somehow instruct the bundler not the recursively trace the dependencies. And, `[*]` is how we tell it.   
+
+`[*]` will exclude the depenencies of each module that the glob patter `*` yeilds. In the above case it will exclude `aurelia-framework`, `aurelia-fetch-client` and so on. 
+
+
+
 
 Here is a typical bundle configuration with all it's glory:
 
