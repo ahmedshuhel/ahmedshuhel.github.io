@@ -189,14 +189,14 @@ Our goal is to create a bundle of our application code only. We have to somehow 
 `[*]` will exclude the depenencies of each module that the glob patter `*` yeilds. In the above case it will exclude `aurelia-framework`, `aurelia-fetch-client` and so on. 
 
 
-
+# Bundle Configuration
 
 Here is a typical bundle configuration with all it's glory:
 
 ```javascript
     "dist/app-build": {
       includes: [
-        '*',
+        '[*]',
         '*.html!text',
         '*.css!text',
         'bootstrap/css/bootstrap.css!text'
@@ -207,7 +207,8 @@ Here is a typical bundle configuration with all it's glory:
       ],
       options: {
         inject: true,
-        minify: true
+        minify: true,
+        rev: true
       }
     }
 ```
@@ -226,13 +227,15 @@ excludes : [
 - **inject**: If set to this to true, this will inject the bundle in `config.js`, so whenever the application needs a file within that bundle, the loader will load the entire bundle the first time, This is how we can achieve lazy bundle loading. For a large app with multiple sub sections, this will help us avoid loading everything upfront.
 - **minify**: As the name suggests, if this is set to `true`, the the source files will be minified as well.
 
-> Note that, we are using system-builder under the cover. Thus, all the systemjs-builder options should work here.
+ - **rev**: If this is set to `true`, an unique revision number will be appended to the bundle file name.
 
-**force** : If this is set to `true` the task will overwrite any existing file/bundle with the same name. Set it to false if you are not sure about it.
-**packagePath** : By default it's `'.'`, You can change this if your `package.json` file is somewhere else other than the base of your app. `aurelia-bundler` use this file to find `config.js`, `baseURL`, `jspm_packages` folder and other important project configuration.  
+- **force** : If this is set to `true` the task will overwrite any existing file/bundle with the same name. Set it to false if you are not sure about it.
+- **packagePath** : By default it's `'.'`, You can change this if your `package.json` file is somewhere else other than the base of your app. `aurelia-bundler` use this file to find `config.js`, `baseURL`, `jspm_packages` folder and other important project configuration.  
 
 
-At this point if you are like, "Well, this is all good but we already have developed application that uses Polymer and  `HTML Imports` extensively. And we want to bundle them as well." As you may have already known in the [last post](http://blog.durandal.io/2015/09/05/aurelia-early-september-release-notes/), we have created a separate plugin [aurelia-html-import-template-loader](https://github.com/aurelia/html-import-template-loader) exclusively for this use case. We have bundling support for that too. This is how we can do it. This is actually a two part process. First let's install `aurelia-html-import-template-loader` with the command bellow:
+## Bundling HTML Imports
+
+At this point if you are like, "Well, this is all good but we already have developed application that uses Polymer and  `HTML Imports` extensively. And we want to bundle them as well." As you may have already known, we have created a separate plugin [aurelia-html-import-template-loader](https://github.com/aurelia/html-import-template-loader) exclusively for this use case. We have bundling support for that too. This is how we can do it. It's actually a two part process. First let's install `aurelia-html-import-template-loader` with the command below:
 
 ```shell
  jspm install aurelia-html-import-template-loader
@@ -262,7 +265,7 @@ With this little change Aurelia Loader will now use `HTML Imports` to load all t
 
 ```javascript
     "dist/view-bundle": {
-      htmlimport: true,
+      htmlimports: true,
       includes: 'dist/*.html',
       options: {
         inject: {
@@ -284,7 +287,7 @@ var config = {
   bundles: {
     "dist/app-build": {
       includes: [
-        '*'
+        '[*]'
       ],
       options: {
         inject: true,
@@ -352,5 +355,3 @@ The above pattern will bundle all the views in `dist` and it's child folders exc
 indexFile: 'index.html'
 destFile : 'dest_index.html'
 ```
-
-If you have any issues regarding `bundling` be sure to raise [here](https://github.com/aurelia/bundler/issues)
