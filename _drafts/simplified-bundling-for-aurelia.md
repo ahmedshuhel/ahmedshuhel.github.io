@@ -19,33 +19,33 @@ In contrast to that for example angular or any other jspm depended application c
  jspm bundle app/boot dist/bundle.js -im
 ``` 
 
-As far as user is concern this is far simpler and less error prone in "Most" cases. Yes there are some conrer cases that user/developer needs to do some advanced stuff but the above command will work in most cases.
+As far as user is concern this is far simpler and less error prone in "Most" cases. Yes there are some conrer cases that user/developer needs to do some advanced stuff but the above command will work roughly 90% of the time.
 
-As long as Aurelia is concern we cannot do that becasuse all the application dependencies are not staticly tracable as our `router` and `di` is loading and resolving them dynamically during runtime of the app.
+As long as Aurelia is concern we cannot do that becasuse all the application dependencies are not staticly tracable as our `router` and `loader` is loading and resolving them dynamically during runtime of the app.
 
-This is one of the most beautiful aspect of Aurelia as it helps promote our vision of less framework intrusion and keep the app modular over time. Somewhat of disadvantage for `bundler`.
+This is one of the most beautiful aspect of Aurelia as it helps promote our vision of less framework intrusion and keep the app modular over time. But it comes somewhat of disadvantage for `bundler`.
 
 ## Proposal 
 
-At this point of time `JSPM/SystemJS Builder` can be used to replace `Aurelia Bundler` almost anytime. Our bundler does very few things that like `Versioning` etc. This does not qutie justifies it's existance. To justfiy it's name `Aurelia Bundler` it should in theory understand the Framework at least and should let user bundle like this:
+At this point of time `JSPM/SystemJS Builder` can be used to replace `Aurelia Bundler` almost anytime. Our bundler does one or two things like `Versioning` etc. This does not qutie justifies it's existance. To justfiy it's name `Aurelia Bundler` it should in theory understand the Framework and should let user bundle like this:
 
-```shell 
+```javascript 
 var bundler = require('aurelia-bundler');
 
-gulp.task('bundle', function(){
-    bundler.bundle({
+gulp.task('bundle', function(){    
+	bundler.bundle({
 	  "dist/app-build" : {
-		 include : ['src/app'],
+		 includes : ['src/app'],
 		 options : {
 			minify: true,
 			rev: true,		   
 		 }
 	   }
-	})
+	});
 });
 
 ```
-And the bundle will resolve all the dependencies including Aurelia Plugins etc. This is ambitous. But, I have been thinking about it for a long time. And I belive I can pull this off. By know Aurelia dependencies including Plugins the bundler can call it self a ture Aurelia Bundler.
+And the bundle will resolve all the dependencies including ***Aurelia Plugins*** etc. This is ambitous. But, I have been thinking about it for a long time. And I belive I can pull this off. By know Aurelia dependencies including Plugins the bundler can call it self a ture Aurelia Bundler.
 
 ## How I would procced
 
