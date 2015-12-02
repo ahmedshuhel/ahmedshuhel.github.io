@@ -49,7 +49,7 @@ And the bundle will resolve all the dependencies including ***Aurelia Plugins***
 
 ## How I would procced
 
-For the convenience of discussion let's say there are two types of dependencies in an Aurelia Applicatin code.
+For the convenience of discussion let's say there are two types of dependencies for a module in an Aurelia Applicatin code.
 
 1. Static Dependencies:
 
@@ -57,19 +57,24 @@ For the convenience of discussion let's say there are two types of dependencies 
 2. Dynamic Dependencies:
 
 
-There is no problem at all for tracing static dependenies infact it's what we are doing now. And conder it done.
+There is no problem at all for tracing static dependenies as system-builder does this for us, infact it's what we are doing now. And conder it done.
+
+Dynamic dependiceis are the thing that can't be staticly tracable by analyzing `import` statements.
 
 - Tracing Dependencies from Views.
 - Tracing Dependencies from Application Code.
 - Tracing Dependencies for Plugins.
 
-## Hook for SystemJS Builder.
-
-it has not extension point currently. So, I would create one and provide functions that extends it capabily by accepting the `asset specific` custom analyzer for Aurelia. 
 
 ## Aurelia View Dependency Analyzer
 
-## Aurelia View Model Dependency Analyzer.
+## Aurelia View Model/Module Dependency Analyzer.
 
 - Find `Router` config and resolve dependencies.
 - Will find attributes, databind syntax and resolve dependencies
+
+
+
+## Hook for SystemJS Builder.
+
+it has not extension point currently. So, I would create one and provide functions that extends it capabily by accepting the `asset specific` custom analyzer for Aurelia. 
