@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Random Thoughts
+          Searching in Kibana - Random Thoughts
         
     </title>
 
-    <link rel="canonical" href="http://blog.ahmedshuhel.com/">
+    <link rel="canonical" href="http://blog.ahmedshuhel.com/2018/03/02/Searching-in-Kibana/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,8 +69,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/header_img/home-bg-2-dark.png') 
-            /*config*/
+            background-image: url('')
+            /*post*/
         
     }
     
@@ -83,10 +83,24 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="site-heading">
-                        <h1>Random Thoughts</h1>
-                        <!--<hr class="small">-->
-                        <span class="subheading"></span>
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/site_tags/Kibana" title="Kibana">Kibana</a>
+                            
+                              <a class="tag" href="/site_tags/Elastic Search" title="Elastic Search">Elastic Search</a>
+                            
+                              <a class="tag" href="/site_tags/Lucene" title="Lucene">Lucene</a>
+                            
+                              <a class="tag" href="/site_tags/Query" title="Query">Query</a>
+                            
+                        </div>
+                        <h1>Searching in Kibana</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Shuhel Ahmed on
+                            2018-03-02
+                        </span>
                     </div>
                 
 
@@ -182,76 +196,69 @@
 
 
     <!-- Main Content -->
-    <!-- Main Content -->
-<div class="container">
-    <div class="row">
-        
-<!-- NO SIDEBAR -->
-    <!-- Post Container -->
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 post-container">
-                <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
 
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-<div class="post-preview">
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-    <a href="/2018/03/02/Searching-in-Kibana/">
-        <h2 class="post-title">
-            Searching in Kibana
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Kibana helps visualizing Elasticsearch data. Since Elasticsearch is based on Lucene, it’s no surprise that Kibana uses Lucene query syntax. The syntax is very intuitive in nature.
-A query consists ......
-        </div>
-    </a>
-    
-        <p class="post-meta">
-            Posted by Shuhel Ahmed on
-            2018-03-02
-        </p>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2018/02/24/Telnet-a-Network-POS-Printer/">
-        <h2 class="post-title">
-            Telnet a Network POS Printer
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            Telnet is a useful program that can be used to test network POS printers. On Windows 10/Server 2014 however, it does not come pre-installed like the previous versions of windows.
-We can install tel......
-        </div>
-    </a>
-    
-        <p class="post-meta">
-            Posted by Shuhel Ahmed on
-            2018-02-24
-        </p>
-    
-
-</div>
-<hr>
-
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    
+                <p>Kibana helps visualizing Elasticsearch data. Since Elasticsearch is based on Lucene, it’s no surprise that Kibana uses Lucene query syntax. The syntax is very intuitive in nature.</p>
+<p>A query consists of <code>term</code> and <code>operator</code>:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res.statusCode: 200 AND req.user.name: "John Doe"</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>res.statusCode</code> and <code>req.user.id</code> are fields. <code>200</code> and <code>John Doe</code> are terms, <code>AND</code> is the operator.</p>
+</blockquote>
+<p>We have regular query operators like <code>AND</code>,<code>OR</code>, <code>NOT</code> etc. There are other operators like <code>+</code> and <code>-</code> for specifying whither the term should or should not exists.</p>
+<p>Terms can be further modified for better result. Few frequently used modifiers are:</p>
+<ul>
+<li><code>?</code> and <code>*</code>: Wildcard search</li>
+<li><code>~</code>: Fuzzy search</li>
+<li><code>[ 2 To 5 ]</code>: Range queries.</li>
 </ul>
+<p>Lucene offers a very powerful query language. For more details visit: <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html" target="_blank" rel="noopener">https://lucene.apache.org/core/2_9_4/queryparsersyntax.html</a></p>
 
+                
 
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2018/02/24/Telnet-a-Network-POS-Printer/" data-toggle="tooltip" data-placement="top" title="Telnet a Network POS Printer">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
             </div>
-    <!-- Sidebar Container -->
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
             <div class="
                 col-lg-8 col-lg-offset-2
                 col-md-10 col-md-offset-1
@@ -260,13 +267,68 @@ We can install tel......
                 <!-- Featured Tags -->
                 
 
-
                 <!-- Friends Blog -->
                 
             </div>
-        
+        </div>
     </div>
-</div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "ahmedshuhel";
+    var disqus_identifier = "http://blog.ahmedshuhel.com/2018/03/02/Searching-in-Kibana/";
+    var disqus_url = "http://blog.ahmedshuhel.com/2018/03/02/Searching-in-Kibana/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
 
 
     <!-- Footer -->
